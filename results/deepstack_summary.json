@@ -1,0 +1,95 @@
+{
+  "model": "mlx-community/Qwen3-VL-4B-Instruct-4bit",
+  "rows": [
+    {
+      "condition": "both_paths",
+      "drop": 0.0,
+      "n": 300,
+      "accuracy": 0.9133,
+      "accuracy_yes_subset": 0.8571,
+      "yes_rate": 0.4367,
+      "unparsed": 0
+    },
+    {
+      "condition": "both_paths",
+      "drop": 0.25,
+      "n": 300,
+      "accuracy": 0.9,
+      "accuracy_yes_subset": 0.8299,
+      "yes_rate": 0.4233,
+      "unparsed": 0
+    },
+    {
+      "condition": "both_paths",
+      "drop": 0.5,
+      "n": 300,
+      "accuracy": 0.9067,
+      "accuracy_yes_subset": 0.8435,
+      "yes_rate": 0.43,
+      "unparsed": 0
+    },
+    {
+      "condition": "both_paths",
+      "drop": 0.75,
+      "n": 300,
+      "accuracy": 0.8733,
+      "accuracy_yes_subset": 0.7619,
+      "yes_rate": 0.3833,
+      "unparsed": 0
+    },
+    {
+      "condition": "both_paths",
+      "drop": 1.0,
+      "n": 300,
+      "accuracy": 0.5067,
+      "accuracy_yes_subset": 0.0068,
+      "yes_rate": 0.01,
+      "unparsed": 0
+    },
+    {
+      "condition": "no_deepstack",
+      "drop": 0.0,
+      "n": 300,
+      "accuracy": 0.9033,
+      "accuracy_yes_subset": 0.8367,
+      "yes_rate": 0.4267,
+      "unparsed": 0
+    },
+    {
+      "condition": "no_deepstack",
+      "drop": 0.25,
+      "n": 300,
+      "accuracy": 0.8933,
+      "accuracy_yes_subset": 0.8163,
+      "yes_rate": 0.4167,
+      "unparsed": 0
+    },
+    {
+      "condition": "no_deepstack",
+      "drop": 0.5,
+      "n": 300,
+      "accuracy": 0.89,
+      "accuracy_yes_subset": 0.8095,
+      "yes_rate": 0.4133,
+      "unparsed": 0
+    },
+    {
+      "condition": "no_deepstack",
+      "drop": 0.75,
+      "n": 300,
+      "accuracy": 0.8667,
+      "accuracy_yes_subset": 0.7483,
+      "yes_rate": 0.3767,
+      "unparsed": 0
+    },
+    {
+      "condition": "deepstack_only",
+      "drop": 0.0,
+      "n": 300,
+      "accuracy": 0.7533,
+      "accuracy_yes_subset": 0.5102,
+      "yes_rate": 0.2567,
+      "unparsed": 0
+    }
+  ]
+}

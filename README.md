@@ -19,6 +19,26 @@ With no image tokens, the model answers "No" to almost every question.
 | 75%  | 67.3  | 87.3% | 76.2% | 38.3% |
 | 100% | 0     | 50.7% | 0.7%  | 1.0%  |
 
+## New: which path carries the image?
+
+Qwen3-VL sends image data to the LLM on two paths: the image tokens in the input (path 1), and the
+deepstack copies from vision layers 6, 12 and 18, added after LLM layers 1–3 (path 2).
+The paper does not examine the two paths. `run_deepstack.py` tests them on the same 300 questions.
+
+| Condition | Accuracy |
+|---|---|
+| Both paths (normal model), 0% removed | 91.3% |
+| Path 1 only (deepstack off), 0% removed | 90.3% |
+| Path 1 only, 75% removed | 86.7% |
+| Path 2 only (input image embeddings set to zero) | 75.3% |
+| No image data | 50.7% |
+
+- Turning deepstack off changes at most 7 of 300 answers (McNemar p ≥ 0.125 at every drop rate):
+  deepstack does not cause the flat curve.
+- Deepstack alone reaches 75.3% vs. 50.7% with no image data (p < 0.001): it carries real image
+  information, but adds almost nothing when the input tokens are present.
+- The 4-point drop at 75% removal (91.3% → 87.3%) is small but real (p = 0.012).
+
 ## How it works
 
 `token_drop.py` runs the vision tower once per image, then removes a random fraction of the image
@@ -52,9 +72,11 @@ hf download mlx-community/Qwen3-VL-4B-Instruct-4bit
 hf download lmms-lab/POPE --repo-type dataset --include "Full/random-00000-of-00001.parquet" --local-dir data/pope
 python check_logits.py      # 0% drop == unpatched model
 python run_pope.py          # ~2 h on an 8 GB M1; resumable
+python run_deepstack.py     # deepstack test, ~2-3 h
 python make_chart.py
 ```
 
-Outputs: `results/answers.jsonl` (every answer), `results/summary.json`, `results/chart.html`.
+Outputs: `results/answers.jsonl` (every answer), `results/summary.json`, `results/chart.html`,
+`results/deepstack_answers.jsonl`, `results/deepstack_summary.json`.
 
 Figure 2 in the page is from the paper, CC BY 4.0.

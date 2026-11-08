@@ -42,8 +42,14 @@ class TokenDropper:
         mx.eval(feats.inputs_embeds, feats.position_ids, feats.deepstack_visual_embeds)
         return input_ids, feats
 
-    def answer(self, input_ids, feats, drop: float, seed: int = 0) -> tuple[str, int]:
-        """Greedy answer after removing a random fraction `drop` of the image tokens."""
+    def answer(self, input_ids, feats, drop: float, seed: int = 0,
+               deepstack: bool = True, zero_input_image: bool = False) -> tuple[str, int]:
+        """Greedy answer after removing a random fraction `drop` of the image tokens.
+
+        deepstack=False: do not add the deepstack copies after LLM layers 1-3.
+        zero_input_image=True: set the image-token input embeddings to zero, so image data
+        can enter only through the deepstack copies.
+        """
         img_pos = np.flatnonzero(np.array(feats.visual_pos_masks[0]))
         n_img = len(img_pos)
         n_drop = int(round(drop * n_img))
@@ -60,12 +66,14 @@ class TokenDropper:
         pos = feats.position_ids[:, :, ks]  # (3, 1, L'): original M-RoPE positions
         vis_mask = feats.visual_pos_masks[:, ks]
         ki = mx.array(keep_img, dtype=mx.uint32)
-        deepstack = [d[ki] for d in feats.deepstack_visual_embeds]  # 3 x (n_kept, 2560)
+        ds = [d[ki] for d in feats.deepstack_visual_embeds] if deepstack else None  # 3 x (n_kept, 2560)
+        if zero_input_image:
+            embeds = mx.where(vis_mask[..., None], mx.zeros_like(embeds), embeds)
 
         lm = self.model.language_model
         cache = make_prompt_cache(lm)
         out = lm(ids, inputs_embeds=embeds, cache=cache, position_ids=pos,
-                 visual_pos_masks=vis_mask, deepstack_visual_embeds=deepstack)
+                 visual_pos_masks=vis_mask, deepstack_visual_embeds=ds)
         next_pos = int(feats.position_ids.max().item()) + 1
 
         tokens = []

@@ -165,6 +165,21 @@
   .kinds div { display: grid; grid-template-columns: 110px 1fr; gap: 10px; }
   .kinds dt { padding-top: 2px; } .kinds dd { margin: 0; }
   .kinds .used dt { color: var(--accent); }
+  .new-tag { display: inline-block; font: 600 .75rem var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--panel); background: var(--s2); border-radius: 4px; padding: 1px 8px; }
+  .paths svg { min-width: 520px; }
+  .paths .p1 { stroke: var(--s1); stroke-width: 2.5; fill: none; }
+  .paths .p2 { stroke: var(--s2); stroke-width: 2; stroke-dasharray: 6 4; fill: none; }
+  .paths .hp1 { fill: var(--s1); } .paths .hp2 { fill: var(--s2); }
+  .paths .t1 { fill: var(--s1); font-weight: 600; } .paths .t2 { fill: var(--s2); font-weight: 600; }
+  .bars { display: grid; gap: 8px; }
+  .bar-row { display: grid; grid-template-columns: minmax(120px, 190px) 1fr 54px; gap: 10px; align-items: center; font-size: .92rem; }
+  .bar-track { position: relative; height: 18px; }
+  .bar-track .fill { height: 100%; border-radius: 0 4px 4px 0; }
+  .bar-track .guess { position: absolute; left: 50%; top: -4px; bottom: -4px; border-left: 1.5px dashed var(--muted); }
+  .bar-row .val { font: 600 .9rem var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+  .f-both { background: var(--fg); opacity: .75; } .f-p1 { background: var(--s1); } .f-p2 { background: var(--s2); } .f-none { background: var(--muted); opacity: .6; }
+  .bars-axis { display: grid; grid-template-columns: minmax(120px, 190px) 1fr 54px; gap: 10px; font: 11px var(--mono); color: var(--muted); }
+  .bars-axis div:nth-child(2) { display: flex; justify-content: space-between; }
 </style>
 
 </head>
@@ -185,6 +200,7 @@
       <div class="stat fail"><b>50.7%</b><span>All removed (same as a guess)</span></div>
     </div>
     <p class="note">Qwen3-VL-4B, 4-bit, 300 POPE yes/no questions.</p>
+    <p style="margin:0"><span class="new-tag">New</span> We also tested the two paths that carry image data into the model. The paper does not examine them. <a href="#paths" style="color:var(--accent)">See the result ↓</a></p>
   </section>
 
   <section class="card">
@@ -273,10 +289,54 @@
 
     </div>
     <ul class="plain">
-      <li>Up to 75% removal, accuracy goes down by only 4 points.</li>
+      <li>Up to 75% removal, accuracy goes down by only 4 points. This decrease is small, but it is real (paired test, p = 0.012).</li>
       <li>With no image tokens, the model says "No" to 99% of the questions.</li>
     </ul>
     <details class="more"><summary>Show the numbers</summary><div class="body chart"><div class="tablewrap"><table><thead><tr><th>Removed</th><th>Image tokens kept (mean)</th><th>Accuracy, all</th><th>Accuracy, answer is Yes</th><th>Model says Yes</th><th>Not yes/no</th></tr></thead><tbody><tr><td>0%</td><td>269.3</td><td>91.3%</td><td>85.7%</td><td>43.7%</td><td>0</td></tr><tr><td>25%</td><td>202</td><td>90.0%</td><td>83.0%</td><td>42.3%</td><td>0</td></tr><tr><td>50%</td><td>134.7</td><td>90.7%</td><td>84.4%</td><td>43.0%</td><td>0</td></tr><tr><td>75%</td><td>67.3</td><td>87.3%</td><td>76.2%</td><td>38.3%</td><td>0</td></tr><tr><td>100%</td><td>0</td><td>50.7%</td><td>0.7%</td><td>1.0%</td><td>0</td></tr></tbody></table></div></div></details>
+  </section>
+
+  <section class="card" id="paths">
+    <span><span class="new-tag">New</span> <span class="eyebrow">Which path carries the image?</span></span>
+    <p style="margin:0">Qwen3-VL sends image data to the language model on two paths. The paper removes tokens, but it does not examine the two paths. We did two new tests.</p>
+    <div class="diagram paths">
+        <svg viewBox="0 30 680 140" role="img" aria-label="Two paths for image data. Path 1: the last layer of the vision encoder goes through the merger into the image tokens at the input of the language model. Path 2, deepstack: layers 6, 12 and 18 of the vision encoder go through three more mergers and are added after language model layers 1, 2 and 3.">
+          <defs>
+            <marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path class="hp1" d="M0,0 L10,5 L0,10 z"/></marker>
+            <marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path class="hp2" d="M0,0 L10,5 L0,10 z"/></marker>
+            <marker id="m0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="head" d="M0,0 L10,5 L0,10 z"/></marker>
+          </defs>
+          <rect class="box" x="10" y="102" width="140" height="46" rx="8"/>
+          <text x="80" y="122" text-anchor="middle">Vision encoder</text>
+          <text x="80" y="139" text-anchor="middle" class="dim">24 layers</text>
+          <line class="p1" x1="150" y1="125" x2="294" y2="125" marker-end="url(#m1)"/>
+          <text x="222" y="146" text-anchor="middle" class="t1">Path 1: input tokens</text>
+          <text x="222" y="162" text-anchor="middle" class="dim">last layer</text>
+          <path class="p2" d="M80,102 L80,62 L457,62"/>
+          <line class="p2" x1="377" y1="62" x2="377" y2="101" marker-end="url(#m2)"/>
+          <line class="p2" x1="417" y1="62" x2="417" y2="101" marker-end="url(#m2)"/>
+          <line class="p2" x1="457" y1="62" x2="457" y2="101" marker-end="url(#m2)"/>
+          <text x="96" y="54" text-anchor="start" class="t2">Path 2: deepstack</text>
+          <text x="232" y="54" text-anchor="start" class="dim">layers 6, 12, 18</text>
+          <rect class="layer" x="298" y="105" width="56" height="40" rx="4"/><text x="326" y="130" text-anchor="middle" class="dim">Input</text>
+          <rect class="layer" x="360" y="105" width="34" height="40" rx="4"/><text x="377" y="130" text-anchor="middle" class="dim">L1</text>
+          <rect class="layer" x="400" y="105" width="34" height="40" rx="4"/><text x="417" y="130" text-anchor="middle" class="dim">L2</text>
+          <rect class="layer" x="440" y="105" width="34" height="40" rx="4"/><text x="457" y="130" text-anchor="middle" class="dim">L3</text>
+          <text x="492" y="130" text-anchor="middle" class="dim">…</text>
+          <rect class="layer" x="510" y="105" width="40" height="40" rx="4"/><text x="530" y="130" text-anchor="middle" class="dim">L36</text>
+          <text x="424" y="162" text-anchor="middle" class="dim">Language model</text>
+          <line class="arrow" x1="554" y1="125" x2="590" y2="125" marker-end="url(#m0)"/>
+          <text x="626" y="130" text-anchor="middle" class="lbl-strong">Yes/No</text>
+        </svg>
+      </div>
+    <span class="eyebrow">Accuracy, no tokens removed</span>
+    <div class="bars" role="img" aria-label="Accuracy with no tokens removed. Both paths 91.3 percent. Path 1 only 90.3 percent. Path 2 only 75.3 percent. No image data 50.7 percent. A guess gives 50 percent."><div class="bar-row"><span>Both paths (normal)</span><div class="bar-track"><div class="fill f-both" style="width:91.3%"></div><div class="guess"></div></div><span class="val">91.3%</span></div><div class="bar-row"><span>Path 1 only</span><div class="bar-track"><div class="fill f-p1" style="width:90.3%"></div><div class="guess"></div></div><span class="val">90.3%</span></div><div class="bar-row"><span>Path 2 only</span><div class="bar-track"><div class="fill f-p2" style="width:75.3%"></div><div class="guess"></div></div><span class="val">75.3%</span></div><div class="bar-row"><span>No image data</span><div class="bar-track"><div class="fill f-none" style="width:50.7%"></div><div class="guess"></div></div><span class="val">50.7%</span></div><div class="bars-axis"><div></div><div><span>0%</span><span>50% = guess</span><span>100%</span></div><div></div></div></div>
+    <ul class="plain">
+      <li><b>Path 1 only:</b> 90.3%. This is only 1 point less than the normal model. The difference is not significant.</li>
+      <li><b>Path 1 only, 75% removed:</b> 86.7%. The curve stays flat without path 2. Path 2 does not cause the flat curve.</li>
+      <li><b>Path 2 only:</b> 75.3%. Without image data, the model gets 50.7%. Path 2 alone carries much image data.</li>
+    </ul>
+    <p class="lead" style="margin:0">Conclusion: each path carries image data. When path 1 is present, path 2 adds almost nothing.</p>
+    <p class="note">Paired test on the same 300 questions (McNemar). Path 1 only vs. normal: p = 0.25. Path 2 only vs. no image data: p &lt; 0.001. Code: <code>run_deepstack.py</code>.</p>
   </section>
 
   <section class="card">
