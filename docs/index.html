@@ -150,6 +150,21 @@
   .simple .lbl-gone { fill: var(--s2); font-weight: 600; }
   details.more summary { font-weight: 600; }
   .wrap > p.small { margin: 0; color: var(--muted); font-size: .85rem; }
+  .flow { display: flex; align-items: stretch; gap: 8px; flex-wrap: wrap; }
+  .flow .step { flex: 1 1 140px; border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; display: grid; gap: 2px; }
+  .flow .step b { font: 600 1.3rem/1.2 var(--sans); font-variant-numeric: tabular-nums; }
+  .flow .step span { color: var(--muted); font-size: .85rem; }
+  .flow .to { align-self: center; color: var(--muted); }
+  .split { display: flex; height: 26px; border-radius: 6px; overflow: hidden; gap: 2px; font: 500 .8rem var(--mono); }
+  .split div { display: flex; align-items: center; padding: 0 8px; color: #fff; }
+  .split .y { background: var(--s1); } .split .n { background: var(--muted); }
+  .qs { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+  .qs li { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; border-bottom: 1px solid var(--line); padding: 4px 0; font-size: .95rem; }
+  .qs code { font: 500 .85rem var(--mono); color: var(--muted); }
+  .kinds { display: grid; gap: 8px; margin: 0; }
+  .kinds div { display: grid; grid-template-columns: 110px 1fr; gap: 10px; }
+  .kinds dt { padding-top: 2px; } .kinds dd { margin: 0; }
+  .kinds .used dt { color: var(--accent); }
 </style>
 
 </head>
@@ -284,6 +299,42 @@
   </section>
 
   <span class="eyebrow" style="margin-top:8px">Details</span>
+
+  <details class="more">
+    <summary><span class="tag">Detail</span> The dataset: POPE</summary>
+    <div class="body">
+      <div class="ste">
+        <span class="ste-tag">In ASD-STE100</span>
+        <p>POPE tests if a model sees objects that are not in the image. All questions have the same form: "Is there a [object] in the image?" The answer is Yes or No. The images come from the COCO dataset.</p>
+      </div>
+      <ul class="qs">
+        <li><span>Is there a laptop in the image?</span><code>Yes</code></li>
+        <li><span>Is there a broccoli in the image?</span><code>Yes</code></li>
+        <li><span>Is there a wine glass in the image?</span><code>No</code></li>
+        <li><span>Is there a refrigerator in the image?</span><code>No</code></li>
+      </ul>
+      <span class="eyebrow">Three ways to select the "No" objects</span>
+      <dl class="kinds">
+        <div class="used"><dt>Random ✓</dt><dd>Any object that is not in the image. We use this split.</dd></div>
+        <div><dt>Popular</dt><dd>Objects that occur frequently in the dataset.</dd></div>
+        <div><dt>Adversarial</dt><dd>Objects that usually occur together with the objects in the image. This split is the most difficult.</dd></div>
+      </dl>
+      <span class="eyebrow">Our sample</span>
+      <div class="flow">
+        <div class="step"><b>3000</b><span>questions in the random split, 500 images</span></div>
+        <div class="to">→</div>
+        <div class="step"><b>300</b><span>questions, random selection with seed 0, 238 images</span></div>
+      </div>
+      <div class="split" role="img" aria-label="147 Yes answers and 153 No answers">
+        <div class="y" style="flex:147">Yes 147</div><div class="n" style="flex:153">No 153</div>
+      </div>
+      <ul class="plain">
+        <li>The paper uses 300 questions too, with 149 Yes. The paper does not say which questions.</li>
+        <li>The image size sets the number of image tokens. A 640 × 480 image gives 300 tokens. A 640 × 427 image gives 260 tokens. The mean is 269.</li>
+        <li>The most frequent object in the questions is "person" (38 of 300).</li>
+      </ul>
+    </div>
+  </details>
 
   <details class="more">
     <summary><span class="tag">Detail</span> How an image becomes 300 tokens</summary>
