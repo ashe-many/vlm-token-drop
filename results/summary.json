@@ -1,0 +1,56 @@
+{
+  "model": "mlx-community/Qwen3-VL-4B-Instruct-4bit",
+  "n_examples": 300,
+  "drops": [
+    {
+      "drop": 0.0,
+      "n": 300,
+      "mean_kept_tokens": 269.3,
+      "accuracy": 0.9133,
+      "accuracy_yes_subset": 0.8571,
+      "n_yes_subset": 147,
+      "yes_rate": 0.4367,
+      "unparsed": 0
+    },
+    {
+      "drop": 0.25,
+      "n": 300,
+      "mean_kept_tokens": 202.0,
+      "accuracy": 0.9,
+      "accuracy_yes_subset": 0.8299,
+      "n_yes_subset": 147,
+      "yes_rate": 0.4233,
+      "unparsed": 0
+    },
+    {
+      "drop": 0.5,
+      "n": 300,
+      "mean_kept_tokens": 134.7,
+      "accuracy": 0.9067,
+      "accuracy_yes_subset": 0.8435,
+      "n_yes_subset": 147,
+      "yes_rate": 0.43,
+      "unparsed": 0
+    },
+    {
+      "drop": 0.75,
+      "n": 300,
+      "mean_kept_tokens": 67.3,
+      "accuracy": 0.8733,
+      "accuracy_yes_subset": 0.7619,
+      "n_yes_subset": 147,
+      "yes_rate": 0.3833,
+      "unparsed": 0
+    },
+    {
+      "drop": 1.0,
+      "n": 300,
+      "mean_kept_tokens": 0.0,
+      "accuracy": 0.5067,
+      "accuracy_yes_subset": 0.0068,
+      "n_yes_subset": 147,
+      "yes_rate": 0.01,
+      "unparsed": 0
+    }
+  ]
+}
