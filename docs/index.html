@@ -207,8 +207,9 @@
     <p style="margin:0"><span class="new-tag">New</span> The second image path (deepstack) does not cause this result. <a href="#paths" style="color:var(--accent)">See ↓</a></p>
   </section>
 
-  <section class="card">
-    <span class="eyebrow">1 · The experiment</span>
+  <details class="more">
+    <summary><span class="tag">1</span> The experiment</summary>
+    <div class="body">
     <div class="diagram simple">
         <svg viewBox="0 36 680 108" role="img" aria-label="The experiment. The image goes into the vision tower. The vision tower gives 300 image tokens. We remove a random part of these tokens: 0, 25, 50, 75 or 100 percent. The kept image tokens and the question go into the language model. The language model answers Yes or No.">
           <defs><marker id="sah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
@@ -232,10 +233,12 @@
         </svg>
       </div>
     <p class="note">300 questions × 5 removal rates = 1500 answers.</p>
-  </section>
+    </div>
+  </details>
 
-  <section class="card">
-    <span class="eyebrow">2 · The result</span>
+  <details class="more">
+    <summary><span class="tag">2</span> The result</summary>
+    <div class="body">
     <div class="chart">
       <div class="legend"><span class="key"><i class="sw s1"></i>All 300 questions</span><span class="key"><i class="sw s2"></i>Answer is Yes (147)</span></div>
 <svg viewBox="0 0 640 300" role="img" aria-labelledby="res-title res-desc">
@@ -283,10 +286,12 @@
     </div>
     <p style="margin:0">Up to 75% removal, the curve is almost flat. With no image tokens, the model says "No" to 99% of the questions.</p>
     <details class="more"><summary>Show the numbers</summary><div class="body chart"><div class="tablewrap"><table><thead><tr><th>Removed</th><th>Image tokens kept (mean)</th><th>Accuracy, all</th><th>Accuracy, answer is Yes</th><th>Model says Yes</th><th>Not yes/no</th></tr></thead><tbody><tr><td>0%</td><td>269.3</td><td>91.3%</td><td>85.7%</td><td>43.7%</td><td>0</td></tr><tr><td>25%</td><td>202</td><td>90.0%</td><td>83.0%</td><td>42.3%</td><td>0</td></tr><tr><td>50%</td><td>134.7</td><td>90.7%</td><td>84.4%</td><td>43.0%</td><td>0</td></tr><tr><td>75%</td><td>67.3</td><td>87.3%</td><td>76.2%</td><td>38.3%</td><td>0</td></tr><tr><td>100%</td><td>0</td><td>50.7%</td><td>0.7%</td><td>1.0%</td><td>0</td></tr></tbody></table></div></div></details>
-  </section>
+    </div>
+  </details>
 
-  <section class="card" id="paths">
-    <span><span class="eyebrow">3 · Which path carries the image?</span> <span class="new-tag">New</span></span>
+  <details class="more" id="paths">
+    <summary><span class="tag">3</span> Which path carries the image? <span class="new-tag">New</span></summary>
+    <div class="body">
     <p style="margin:0">Qwen3-VL sends image data on two paths. The paper does not examine them. We turned off one path at a time.</p>
     <div class="diagram paths">
         <svg viewBox="0 30 680 140" role="img" aria-label="Two paths for image data. Path 1: the last layer of the vision encoder goes through the merger into the image tokens at the input of the language model. Path 2, deepstack: layers 6, 12 and 18 of the vision encoder go through three more mergers and are added after language model layers 1, 2 and 3.">
@@ -322,9 +327,10 @@
     <div class="bars" role="img" aria-label="Accuracy with no tokens removed. Both paths 91.3 percent. Path 1 only 90.3 percent. Path 2 only 75.3 percent. No image data 50.7 percent. A guess gives 50 percent."><div class="bar-row"><span>Both paths (normal)</span><div class="bar-track"><div class="fill f-both" style="width:91.3%"></div><div class="guess"></div></div><span class="val">91.3%</span></div><div class="bar-row"><span>Path 1 only</span><div class="bar-track"><div class="fill f-p1" style="width:90.3%"></div><div class="guess"></div></div><span class="val">90.3%</span></div><div class="bar-row"><span>Path 2 only</span><div class="bar-track"><div class="fill f-p2" style="width:75.3%"></div><div class="guess"></div></div><span class="val">75.3%</span></div><div class="bar-row"><span>No image data</span><div class="bar-track"><div class="fill f-none" style="width:50.7%"></div><div class="guess"></div></div><span class="val">50.7%</span></div><div class="bars-axis"><div></div><div><span>0%</span><span>50% = guess</span><span>100%</span></div><div></div></div></div>
     <p class="lead" style="margin:0">Path 1 carries the image. Path 2 alone also carries image data, but with path 1 present it adds almost nothing.</p>
     <p class="note">McNemar paired test. Path 1 only vs. normal: p = 0.25 (no difference). Path 2 only vs. no image: p &lt; 0.001.</p>
-  </section>
+    </div>
+  </details>
 
-  <span class="eyebrow" style="margin-top:8px">Details</span>
+  <span class="eyebrow" style="margin-top:8px">More details</span>
 
   <details class="more">
     <summary><span class="tag">Detail</span> Checks, and differences from the paper</summary>
@@ -801,5 +807,12 @@
 
   <p class="small">Run time: about 2 hours on an 8 GB Apple M1. Model: mlx-community/Qwen3-VL-4B-Instruct-4bit. Data: lmms-lab/POPE, random split.</p>
 </div>
+<script>
+  function openHash() {
+    var el = location.hash && document.querySelector(location.hash);
+    if (el && el.tagName === "DETAILS") { el.open = true; el.scrollIntoView(); }
+  }
+  addEventListener("hashchange", openHash); openHash();
+</script>
 </body>
 </html>
