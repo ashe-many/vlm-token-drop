@@ -185,36 +185,30 @@
   .diagram.wide svg { min-width: 900px; }
   .scroll-hint { font: 500 .75rem var(--mono); color: var(--muted); margin: 0 0 -8px; }
 </style>
-
 </head>
 <body>
+
 <div class="wrap">
   <div>
     <h1>Does the model look at the image?</h1>
-    <p class="sub">A reproduction of one experiment from <a href="https://arxiv.org/abs/2605.22903">Seeing without Looking</a> (arXiv 2605.22903), on an 8 GB Apple M1.</p>
+    <p class="sub">A test of one claim from <a href="https://arxiv.org/abs/2605.22903">Seeing without Looking</a> (arXiv 2605.22903): <i>"Even at 75% token removal, accuracy remains nearly unchanged."</i></p>
   </div>
   <div class="links"><a href="https://github.com/ashe-many/vlm-token-drop">Code on GitHub</a><a href="https://arxiv.org/abs/2605.22903">Paper</a></div>
 
   <section class="card">
     <span class="eyebrow">Summary</span>
-    <p class="lead">We removed image tokens before the language model. Accuracy stays almost the same up to 75% removal. When we remove all image tokens, the model fails.</p>
+    <p class="lead">The claim is correct. We removed 75% of the image tokens and accuracy decreased by only 4 points.</p>
     <div class="stats">
       <div class="stat"><b>91.3%</b><span>All image tokens</span></div>
       <div class="stat"><b>87.3%</b><span>75% removed</span></div>
       <div class="stat fail"><b>50.7%</b><span>All removed (same as a guess)</span></div>
     </div>
-    <p class="note">Qwen3-VL-4B, 4-bit, 300 POPE yes/no questions.</p>
-    <p style="margin:0"><span class="new-tag">New</span> We also tested the two paths that carry image data into the model. The paper does not examine them. <a href="#paths" style="color:var(--accent)">See the result ↓</a></p>
+    <p class="note">Qwen3-VL-4B · 4-bit · 300 POPE yes/no questions · 8 GB Apple M1</p>
+    <p style="margin:0"><span class="new-tag">New</span> The second image path (deepstack) does not cause this result. <a href="#paths" style="color:var(--accent)">See ↓</a></p>
   </section>
 
   <section class="card">
-    <span class="eyebrow">1 · The claim</span>
-    <blockquote>"Even at 75% token removal, accuracy remains nearly unchanged."<cite>arXiv 2605.22903, Figure 2</cite></blockquote>
-    <p style="margin:0">If this is true, the benchmark does not need much of the image. We test the claim on our own computer.</p>
-  </section>
-
-  <section class="card">
-    <span class="eyebrow">2 · The experiment</span>
+    <span class="eyebrow">1 · The experiment</span>
     <div class="diagram simple">
         <svg viewBox="0 36 680 108" role="img" aria-label="The experiment. The image goes into the vision tower. The vision tower gives 300 image tokens. We remove a random part of these tokens: 0, 25, 50, 75 or 100 percent. The kept image tokens and the question go into the language model. The language model answers Yes or No.">
           <defs><marker id="sah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
@@ -237,16 +231,11 @@
           <text x="652" y="93" text-anchor="middle" class="lbl-strong">Yes/No</text>
         </svg>
       </div>
-    <ul class="plain">
-      <li>The vision tower changes the image into about 300 image tokens.</li>
-      <li>We remove a random part of these tokens.</li>
-      <li>The language model gets the kept tokens and the question. It answers Yes or No.</li>
-      <li>We do this for 300 questions and 5 removal rates: 1500 answers.</li>
-    </ul>
+    <p class="note">300 questions × 5 removal rates = 1500 answers.</p>
   </section>
 
   <section class="card">
-    <span class="eyebrow">3 · The result</span>
+    <span class="eyebrow">2 · The result</span>
     <div class="chart">
       <div class="legend"><span class="key"><i class="sw s1"></i>All 300 questions</span><span class="key"><i class="sw s2"></i>Answer is Yes (147)</span></div>
 <svg viewBox="0 0 640 300" role="img" aria-labelledby="res-title res-desc">
@@ -292,16 +281,13 @@
 </svg>
 
     </div>
-    <ul class="plain">
-      <li>Up to 75% removal, accuracy goes down by only 4 points. This decrease is small, but it is real (paired test, p = 0.012).</li>
-      <li>With no image tokens, the model says "No" to 99% of the questions.</li>
-    </ul>
+    <p style="margin:0">Up to 75% removal, the curve is almost flat. With no image tokens, the model says "No" to 99% of the questions.</p>
     <details class="more"><summary>Show the numbers</summary><div class="body chart"><div class="tablewrap"><table><thead><tr><th>Removed</th><th>Image tokens kept (mean)</th><th>Accuracy, all</th><th>Accuracy, answer is Yes</th><th>Model says Yes</th><th>Not yes/no</th></tr></thead><tbody><tr><td>0%</td><td>269.3</td><td>91.3%</td><td>85.7%</td><td>43.7%</td><td>0</td></tr><tr><td>25%</td><td>202</td><td>90.0%</td><td>83.0%</td><td>42.3%</td><td>0</td></tr><tr><td>50%</td><td>134.7</td><td>90.7%</td><td>84.4%</td><td>43.0%</td><td>0</td></tr><tr><td>75%</td><td>67.3</td><td>87.3%</td><td>76.2%</td><td>38.3%</td><td>0</td></tr><tr><td>100%</td><td>0</td><td>50.7%</td><td>0.7%</td><td>1.0%</td><td>0</td></tr></tbody></table></div></div></details>
   </section>
 
   <section class="card" id="paths">
-    <span><span class="new-tag">New</span> <span class="eyebrow">Which path carries the image?</span></span>
-    <p style="margin:0">Qwen3-VL sends image data to the language model on two paths. The paper removes tokens, but it does not examine the two paths. We did two new tests.</p>
+    <span><span class="eyebrow">3 · Which path carries the image?</span> <span class="new-tag">New</span></span>
+    <p style="margin:0">Qwen3-VL sends image data on two paths. The paper does not examine them. We turned off one path at a time.</p>
     <div class="diagram paths">
         <svg viewBox="0 30 680 140" role="img" aria-label="Two paths for image data. Path 1: the last layer of the vision encoder goes through the merger into the image tokens at the input of the language model. Path 2, deepstack: layers 6, 12 and 18 of the vision encoder go through three more mergers and are added after language model layers 1, 2 and 3.">
           <defs>
@@ -334,35 +320,30 @@
       </div>
     <span class="eyebrow">Accuracy, no tokens removed</span>
     <div class="bars" role="img" aria-label="Accuracy with no tokens removed. Both paths 91.3 percent. Path 1 only 90.3 percent. Path 2 only 75.3 percent. No image data 50.7 percent. A guess gives 50 percent."><div class="bar-row"><span>Both paths (normal)</span><div class="bar-track"><div class="fill f-both" style="width:91.3%"></div><div class="guess"></div></div><span class="val">91.3%</span></div><div class="bar-row"><span>Path 1 only</span><div class="bar-track"><div class="fill f-p1" style="width:90.3%"></div><div class="guess"></div></div><span class="val">90.3%</span></div><div class="bar-row"><span>Path 2 only</span><div class="bar-track"><div class="fill f-p2" style="width:75.3%"></div><div class="guess"></div></div><span class="val">75.3%</span></div><div class="bar-row"><span>No image data</span><div class="bar-track"><div class="fill f-none" style="width:50.7%"></div><div class="guess"></div></div><span class="val">50.7%</span></div><div class="bars-axis"><div></div><div><span>0%</span><span>50% = guess</span><span>100%</span></div><div></div></div></div>
-    <ul class="plain">
-      <li><b>Path 1 only:</b> 90.3%. This is only 1 point less than the normal model. The difference is not significant.</li>
-      <li><b>Path 1 only, 75% removed:</b> 86.7%. The curve stays flat without path 2. Path 2 does not cause the flat curve.</li>
-      <li><b>Path 2 only:</b> 75.3%. Without image data, the model gets 50.7%. Path 2 alone carries much image data.</li>
-    </ul>
-    <p class="lead" style="margin:0">Conclusion: each path carries image data. When path 1 is present, path 2 adds almost nothing.</p>
-    <p class="note">Paired test on the same 300 questions (McNemar). Path 1 only vs. normal: p = 0.25. Path 2 only vs. no image data: p &lt; 0.001. Code: <code>run_deepstack.py</code>.</p>
-  </section>
-
-  <section class="card">
-    <span class="eyebrow">4 · How we know the result is correct</span>
-    <ul class="plain">
-      <li><b>Same model at 0%.</b> With 0% removal, the scores for the first answer token are equal to the original model. The difference is exactly 0.</li>
-      <li><b>One removal, four places.</b> We remove the same tokens from the input, from the three deepstack copies and from the position data.</li>
-      <li><b>All answers saved.</b> The repository has all 1500 answers. You can check each one.</li>
-    </ul>
-  </section>
-
-  <section class="card">
-    <span class="eyebrow">5 · Differences from the paper</span>
-    <ul class="plain">
-      <li>The paper uses a large GPU and 16-bit weights. We use an 8 GB Apple M1 and 4-bit weights.</li>
-      <li>The paper does not say which 300 questions it used. We select 300 questions at random, with a fixed seed.</li>
-      <li>The paper does not say the positions of the kept tokens. The kept tokens keep their original positions.</li>
-      <li>We add one test that the paper does not have: 100% removal.</li>
-    </ul>
+    <p class="lead" style="margin:0">Path 1 carries the image. Path 2 alone also carries image data, but with path 1 present it adds almost nothing.</p>
+    <p class="note">McNemar paired test. Path 1 only vs. normal: p = 0.25 (no difference). Path 2 only vs. no image: p &lt; 0.001.</p>
   </section>
 
   <span class="eyebrow" style="margin-top:8px">Details</span>
+
+  <details class="more">
+    <summary><span class="tag">Detail</span> Checks, and differences from the paper</summary>
+    <div class="body">
+      <span class="eyebrow">Checks</span>
+      <ul class="plain">
+        <li>At 0% removal, the output is equal to the original model (difference: 0).</li>
+        <li>We remove the same tokens from the input, the deepstack copies and the positions.</li>
+        <li>The repository has all answers.</li>
+      </ul>
+      <span class="eyebrow">Differences from the paper</span>
+      <ul class="plain">
+        <li>8 GB Apple M1 and 4-bit weights. The paper uses a large GPU and 16-bit weights.</li>
+        <li>300 questions with a fixed seed. The paper does not say which questions it used.</li>
+        <li>Kept tokens keep their original positions. The paper does not say.</li>
+        <li>We add 100% removal.</li>
+      </ul>
+    </div>
+  </details>
 
   <details class="more">
     <summary><span class="tag">Detail</span> The dataset: POPE</summary>
@@ -392,11 +373,7 @@
       <div class="split" role="img" aria-label="147 Yes answers and 153 No answers">
         <div class="y" style="flex:147">Yes 147</div><div class="n" style="flex:153">No 153</div>
       </div>
-      <ul class="plain">
-        <li>The paper uses 300 questions too, with 149 Yes. The paper does not say which questions.</li>
-        <li>The image size sets the number of image tokens. A 640 × 480 image gives 300 tokens. A 640 × 427 image gives 260 tokens. The mean is 269.</li>
-        <li>The most frequent object in the questions is "person" (38 of 300).</li>
-      </ul>
+      <p class="note">The paper also uses 300 questions (149 Yes). Image size sets the token count: mean 269.</p>
     </div>
   </details>
 
